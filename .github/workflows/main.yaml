@@ -1,22 +1,33 @@
-name: Deploy to Render
-on: 
+name: CI/CD Pipeline
+
+on:
   push:
-    branches: [main]
+    branches:
+      - main
+
 jobs:
-  deploy:
-    name: Wait for Deploy
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Release a Docker container to Render
-        uses: bounceapp/render-action@0.6.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          render-token: ${{ secrets.RENDER_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          service-id: ${{ secrets.SERVICE_ID }}
-          dockerfile_directory: ./
-          dockerfile_name: Dockerfile
-          docker_options: "--no-cache"
-          process_type: web
-          retries: 20
-          wait: 16000
-          sleep: 30000
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: pip install --no-cache-dir -r requirements.txt
+
+      - name: Build Docker image
+        run: docker build -t render-flask-app .
+
+      - name: Deploy to Render.com
+        run: |
+          curl -L https://github.com/render/render-cli/releases/latest/download/render_linux -o render
+          chmod +x render
+          ./render --version
+          ./render login --github-token ${{ secrets.GITHUB_TOKEN }}
+          ./render up --file Dockerfile --name render-flask-app --force
