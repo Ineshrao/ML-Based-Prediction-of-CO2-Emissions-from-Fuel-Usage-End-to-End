@@ -1,36 +1,34 @@
-name: CI/CD Pipeline
-
+name: CI/CD for Flask app
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-
       - name: Install dependencies
-        run: pip install --no-cache-dir -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Build Docker image
-        run: docker build -t render-flask-app .
+        run: docker build -t myapp .
 
-      - name: Download Render CLI
-        run: |
-          curl -L https://github.com/render/render-cli/releases/latest/download/render_linux_amd64 -o render
-          chmod +x render
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Get Render token
+        run: echo ${{ secrets.RENDER_TOKEN }}
 
-      - name: Deploy to Render.com
-        run: |
-          ./render --version
-          ./render login --api-key ${{ secrets.RENDER_TOKEN }}
-          ./render deploy --name render-flask-app --docker-image render-flask-app --env-file .env --service-id ${{ secrets.SERVICE_ID }}
+      - name: Deploy to Render
+        uses: bounceapp/render-action@0.6.0
+        with:
+          render-token: ${{ secrets.RENDER_TOKEN }}
+          service-id: ${{ secrets.SERVICE_ID }}
