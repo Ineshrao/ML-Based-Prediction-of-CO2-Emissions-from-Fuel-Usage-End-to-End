@@ -29,5 +29,5 @@ jobs:
           curl -L https://github.com/render/render-cli/releases/latest/download/render_linux -o render
           chmod +x render
           ./render --version
-          ./render login --github-token ${{ secrets.GITHUB_TOKEN }}
-          ./render up --file Dockerfile --name render-flask-app --force
+          ./render login --api-key ${{ secrets.RENDER_TOKEN }}
+          ./render deploy --name render-flask-app --docker-image render-flask-app --env-file .env --service-id ${{ secrets.SERVICE_ID }}
