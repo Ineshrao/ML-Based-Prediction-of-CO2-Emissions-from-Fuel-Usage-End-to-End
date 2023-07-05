@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Install dependencies
         run: pip install --no-cache-dir -r requirements.txt
@@ -24,10 +24,13 @@ jobs:
       - name: Build Docker image
         run: docker build -t render-flask-app .
 
+      - name: Download Render CLI
+        run: |
+          curl -L https://github.com/render/render-cli/releases/latest/download/render_linux_amd64 -o render
+          chmod +x render
+
       - name: Deploy to Render.com
         run: |
-          curl -L https://github.com/render/render-cli/releases/latest/download/render_linux -o render
-          chmod +x render
           ./render --version
           ./render login --api-key ${{ secrets.RENDER_TOKEN }}
           ./render deploy --name render-flask-app --docker-image render-flask-app --env-file .env --service-id ${{ secrets.SERVICE_ID }}
