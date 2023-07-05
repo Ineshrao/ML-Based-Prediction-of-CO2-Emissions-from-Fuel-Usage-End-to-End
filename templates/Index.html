@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>C02 Estimation</title>
+  <link rel="stylesheet" type="text/css" href="../static/style.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="../static/script.js"></script>
+</head>
+<body>
+    <div class="blur-background">
+        <div class="form-container">
+            <h2><div id="output"></div> Car Details</h2>
+            <label for="engine-size">Engine Size:</label>
+            <input type="text" id="ENGINE SIZE" name="engine-size" required>
+
+            <label for="cylinders">Cylinders:</label>
+            <input type="text" id="CYLINDERS" name="cylinders" required>
+
+            <label for="transmission">Transmission:</label>
+            <select id="transmission" name="transmission" required onchange="updateGearOptions()">
+                <option value="">Select Transmission</option>
+                <option value="A">Automatic</option>
+                <option value="AM">Automated Manual</option>
+                <option value="AS">Automatic with Select Shift</option>
+                <option value="AV">Continuously Variable</option>
+                <option value="M">Manual</option>
+            </select>
+
+            <label for="gears">Gears:</label>
+            <select id="gears" name="gears" required>
+                <option value="">Select Gears</option>
+            </select>
+
+            <label for="fuel">Fuel:</label>
+            <select id="FUEL" name="fuel" required>
+                <option value="">Select Fuel</option>
+                <option value="X">Regular gasoline</option>
+                <option value="Z">Premium gasoline</option>
+                <option value="D">Diesel</option>
+                <option value="E">Ethanol (E85)</option>
+                <option value="N">Natural Gas</option>
+            </select>
+             
+            <label for="fuel-consumption">Fuel Consumption :</label>
+            <input type="text" id="FUEL CONSUMPTION" name="fuel-consumption" required>
+
+            <label for="fuel-consumption-hwy">Fuel Consumption Highway (L/100 km):</label>
+            <input type="text" id="HWY (L/100 km)" name="fuel-consumption-hwy" required>
+
+            <label for="fuel-consumption-comb">Fuel Consumption Combined Rating - 55% city, 45% Highway (L/100 km):</label>
+            <input type="text" id="COMB (L/100 km)" name="fuel-consumption-comb" required>
+
+            <label for="fuel-consumption-mpg">Fuel Consumption Combined Rating - 55% city, 45% Highway (mpg):</label>
+            <input type="text" id="COMB (mpg)" name="fuel-consumption-mpg" required>
+
+            <input type="submit" value="Submit" onclick="sendData()">
+        </div>
+  </div>
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <p id="popup-result"></p>
+      <a href="javascript:closePopup()" class="button">Okay</a>
+    </div>
+  </div>
+</body>
+</html>
